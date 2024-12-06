@@ -44,6 +44,7 @@ lib/
 lib64/
 parts/
 sdist/
+staticfiles/
 var/
 *.egg-info/
 .installed.cfg
@@ -86,4 +87,4 @@ __pycache__/
 local_settings.py
 
 .env
-db.sqlite3
+# db.sqlite3

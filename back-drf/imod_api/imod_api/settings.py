@@ -30,7 +30,7 @@ SECRET_KEY = getenv(
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = getenv("DJANGO_DEBUG", "0") == "1"
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost'] + os.getenv("DJANGO_ALLOWED_HOSTS", "").split(",")
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '[::1]',] + os.getenv("DJANGO_ALLOWED_HOSTS", "").split(",")
 
 
 # Application definition
@@ -66,14 +66,17 @@ MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'imod_api.urls'
 
+
+ROOT_URLCONF = 'imod_api.urls'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -99,7 +102,7 @@ WSGI_APPLICATION = 'imod_api.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': DATABASE_DIR / 'db.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
 
@@ -191,3 +194,14 @@ logging.config.dictConfig({
         },
     },
 })
+
+
+STATIC_URL = '/static/'
+
+# Directory for additional static files (optional)
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),  # Ensure this directory exists
+]
+
+# Directory where collected static files will be stored
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
